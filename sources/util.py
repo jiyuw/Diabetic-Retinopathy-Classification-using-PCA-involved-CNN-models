@@ -41,7 +41,8 @@ def load_model(model_file, model_dir=os.path.join("Saved_files", "models")):
 # train a model
 def train_model(model, model_name, dense_num=2, epoch_num=50,
                 train_dir=os.path.join('Data', 'preprocessed_images', 'train'),
-                test_dir=os.path.join('Data', 'preprocessed_images', 'test')):
+                test_dir=os.path.join('Data', 'preprocessed_images', 'test'),
+                save_dir='Saved_files'):
     """
     train a model
     Input:
@@ -95,13 +96,13 @@ def train_model(model, model_name, dense_num=2, epoch_num=50,
     df = pd.DataFrame(model_history.history)
 
     # output
-    hist_name = os.path.join('Saved_files', 'history', model_name+'-train_history.csv')
-    save_name = os.path.join('Saved_files', 'history', model_name + '-model.h5')
+    hist_name = os.path.join(save_dir, model_name+'-train_history.csv')
+    save_name = os.path.join(save_dir, model_name + '-model.h5')
     df.to_csv(hist_name)  # .csv file
     model.save(save_name)  # .h5 file
 
     # save training time
-    time_file = os.path.join('Saved_files', 'training_times.csv')
+    time_file = os.path.join(save_dir, 'training_times.csv')
     if os.path.exists(time_file):
         time_df = pd.read_csv(time_file)
     else:
@@ -114,9 +115,12 @@ def train_model(model, model_name, dense_num=2, epoch_num=50,
     print('Files created:')
     print([hist_name, save_name, time_file])
 
+    return model
+
 
 # PCA analysis on a model
-def model_PCA(model, model_name, mode=1, test_dir=os.path.join('Data', 'preprocessed_images', 'test')):
+def model_PCA(model, model_name, mode=1, test_dir=os.path.join('Data', 'preprocessed_images', 'test'),
+              save_dir='Saved_files'):
     """
     analyze layer activations of the model
     Input:
@@ -166,7 +170,7 @@ def model_PCA(model, model_name, mode=1, test_dir=os.path.join('Data', 'preproce
             curr_row = {'model': model_name, 'layer_cat': cat, 'layer': key, '#pre-PCA': val.shape[1], '#post-PCA': mini}
             output = output.append(curr_row, ignore_index=True).sort_values(by=['layer_cat', 'layer'])
 
-    PCA_file = os.path.join('Saved_files', 'PCA', model_name+'-postPCA.csv')
+    PCA_file = os.path.join(save_dir, model_name+'-postPCA.csv')
     output.to_csv(PCA_file, index=False)
 
     print("PCA on " + model_name + " finished")

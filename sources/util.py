@@ -15,7 +15,6 @@ Functions in analysis:
 
 import tensorflow as tf
 from tensorflow import keras
-from tensorflow.python.keras import layers
 import pandas as pd
 import numpy as np
 from sklearn.decomposition import PCA
@@ -42,7 +41,7 @@ def load_model(model_file, model_dir=os.path.join("Saved_files", "models")):
 def train_model(model, model_name, dense_num=2, epoch_num=50,
                 train_dir=os.path.join('Data', 'preprocessed_images', 'train'),
                 test_dir=os.path.join('Data', 'preprocessed_images', 'test'),
-                save_dir='Saved_files'):
+                save_dir='Saved_files', partial_training=False):
     """
     train a model
     Input:
@@ -77,18 +76,19 @@ def train_model(model, model_name, dense_num=2, epoch_num=50,
     weights = {0: 0.4062717770034843, 1: 1.976271186440678, 2: 0.7333333333333333, 3: 3.785714285714286,
                4: 2.4703389830508473}
 
-    # get index of the first fc layer of the top layers
-    idx = -(dense_num + 1)
-    for layer in model.layers[:idx]:
-        layer.trainable = False
-    for layer in model.layers[idx:]:
-        layer.trainable = True
+    # get index of the first fc layer of the top layers if partial training is True
+    if partial_training:
+        idx = -(dense_num + 1)
+        for layer in model.layers[:idx]:
+            layer.trainable = False
+        for layer in model.layers[idx:]:
+            layer.trainable = True
 
     model.compile(loss='categorical_crossentropy', optimizer="sgd", metrics=metrics)
 
     start = time.time()
-    model_history = model.fit(train_img, epochs=epoch_num, steps_per_epoch=46, validation_data=test_img,
-                              validation_steps=11, class_weight=weights, verbose=1)
+    model_history = model.fit(train_img, epochs=epoch_num, validation_data=test_img,
+                              class_weight=weights)
     finish = time.time()
 
     print(f"{model_name} model trained")
@@ -96,7 +96,7 @@ def train_model(model, model_name, dense_num=2, epoch_num=50,
     df = pd.DataFrame(model_history.history)
 
     # output
-    hist_name = os.path.join(save_dir, model_name+'-train_history.csv')
+    hist_name = os.path.join(save_dir, model_name + '-train_history.csv')
     save_name = os.path.join(save_dir, model_name + '-model.h5')
     df.to_csv(hist_name)  # .csv file
     model.save(save_name)  # .h5 file
@@ -130,9 +130,9 @@ def model_PCA(model, model_name, mode=1, test_dir=os.path.join('Data', 'preproce
     """
 
     if mode == 1:
-        target = ['top']
+        target = ['fc']
     elif mode == 2:
-        target = ['conv', 'top']
+        target = ['conv', 'fc']
     else:
         raise ValueError('mode can only be 1 or 2')
 
@@ -156,22 +156,30 @@ def model_PCA(model, model_name, mode=1, test_dir=os.path.join('Data', 'preproce
         for name in target:
             if name in layer:
                 return name
-        return ''
+        return None
 
     output = pd.DataFrame(columns=['model', 'layer_cat', 'layer', '#pre-PCA', '#post-PCA'])
 
     cnt = 1
     for key, val in layer_output.items():
         cat = layer_check(key)
-        if not cat:
+        if cat:
             variance = analyze_PCA(val)
             cumVar = np.cumsum(variance)
             mini = np.argmax(cumVar[cumVar < 0.999]) + 2
-            curr_row = {'model': model_name, 'layer_cat': cat, 'layer': key, '#pre-PCA': val.shape[1], '#post-PCA': mini}
+            if cat == 'conv':
+                dim = 3
+            else:
+                dim = 1
+            curr_row = {'model': model_name, 'layer_cat': cat, 'layer': key, '#pre-PCA': val.shape[dim],
+                        '#post-PCA': mini}
             output = output.append(curr_row, ignore_index=True).sort_values(by=['layer_cat', 'layer'])
 
-    PCA_file = os.path.join(save_dir, model_name+'-postPCA.csv')
+    PCA_file = os.path.join(save_dir, model_name + '-postPCA.csv')
     output.to_csv(PCA_file, index=False)
 
     print("PCA on " + model_name + " finished")
     print(PCA_file + " created")
+
+    return model
+

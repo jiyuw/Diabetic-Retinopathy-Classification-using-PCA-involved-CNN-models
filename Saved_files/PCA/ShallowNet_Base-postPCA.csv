@@ -1,0 +1,11 @@
+model,layer_cat,layer,#pre-PCA,#post-PCA
+ShallowNet_Base,conv,block1_conv1,32,23
+ShallowNet_Base,conv,block1_conv2,32,24
+ShallowNet_Base,conv,block2_conv1,64,37
+ShallowNet_Base,conv,block2_conv2,64,37
+ShallowNet_Base,conv,block3_conv1,128,125
+ShallowNet_Base,conv,block3_conv2,128,118
+ShallowNet_Base,conv,block4_conv1,256,254
+ShallowNet_Base,conv,block4_conv2,256,235
+ShallowNet_Base,fc,fc1,100,38
+ShallowNet_Base,fc,fc2,100,44

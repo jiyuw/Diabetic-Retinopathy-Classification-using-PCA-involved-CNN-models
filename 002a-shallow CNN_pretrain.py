@@ -16,7 +16,7 @@ def main():
     pre_model = util.train_model(pre_model, model_name)
 
     # PCA analysis
-    util.model_PCA(pre_model, model_name)
+    util.model_PCA(pre_model, model_name, mode=2)
 
 
 if __name__ == '__main__':

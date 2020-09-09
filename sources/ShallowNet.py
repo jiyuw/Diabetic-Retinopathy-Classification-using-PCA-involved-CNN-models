@@ -20,19 +20,16 @@ def ShallowNet(include_top=True, filter_map=None, n_class=5):
     Arguments:
         include_top: whether to include the 3 fully-connected
           layers at the top of the network.
-        filter_map: list of numbers indiacating the number of filters in each layer; 0 means omitted layer
+        filter_map: list of numbers indicating the number of filters in each layer; 0 means omitted layer
         n_class: number of classes to classify, only used when include_top = True
     """
-    img_input = layers.Input(shape=(224, 224, 3))
+    img_input = x = layers.Input(shape=(224, 224, 3))
 
     # set filter_map
     if filter_map is None:
         filter_map = [32, 32, 64, 64, 128, 128, 256, 256]
     elif len(filter_map) != 8:
         raise ValueError('Insufficient filter_map')
-
-    # indicator of first layer
-    first_ind = True
 
     # counter of blocks
     block = 1
@@ -48,17 +45,12 @@ def ShallowNet(include_top=True, filter_map=None, n_class=5):
         else:
             cnt = 1
             for num in block_filters:
-                if first_ind:
-                    x = layers.Conv2D(num, (3, 3), activation='relu', padding='same',
-                                      name=block_name + '_conv' + str(cnt))(img_input)
-                    cnt += 1
-                    first_ind = False
-                else:
-                    x = layers.Conv2D(num, (3, 3), activation='relu', padding='same',
-                                      name=block_name + '_conv' + str(cnt))(x)
-                    cnt += 1
+                x = layers.Conv2D(num, (3, 3), activation='relu', padding='same',
+                                  name=block_name + '_conv' + str(cnt))(x)
+                cnt += 1
 
             x = layers.MaxPooling2D((2, 2), strides=(2, 2), name=block_name + '_pool')(x)
+            x = layers.BatchNormalization(name=block_name + '_batch')(x)
             block += 1
 
     # add top layers if include_top = True

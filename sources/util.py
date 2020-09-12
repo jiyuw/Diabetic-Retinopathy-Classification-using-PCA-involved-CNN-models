@@ -19,6 +19,7 @@ import pandas as pd
 import numpy as np
 from sklearn.decomposition import PCA
 from tensorflow.keras import backend as K
+from tensorflow.python.keras import layers
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 import time
 import os
@@ -36,6 +37,38 @@ def load_model(model_file, model_dir=os.path.join("Saved_files", "models")):
     print(model_name + ' model loaded')
     return model
 
+# add top layers to model base
+def addTops(base, filter_num = 4096, dense_num = 2, class_num = 5):
+    """
+    Add top layers to model base
+    Input:
+        base: model base without flatten layer, fully connected layers and the output layer.
+        filter_num: number of nodes in each layer, can be int if number of nodes is same in every layers, or list if the number is different among layers.
+        dense_num: number of dense layers added to the top
+        class_num: number of class labels
+    Output:
+        a model with flatten layer, fully connected layers, and the output layer.
+    """
+    # check whether number of nodes inputed is valid to add on top.
+    if type(filter_num) == int:
+        filter_num = [filter_num] * dense_num
+    elif type(filter_num) == list:
+        if len(filter_num) != dense_num:
+            raise ValueError('Number of items in filter_num does not match with dense_num')
+    else:
+        raise ValueError('Wrong input type of filter_num')
+    
+    # add flatten layer
+    x = layers.Flatten(name='flatten')(base.output)
+    # add fully connected/dense layers
+    for i in range(dense_num):
+        name = 'top_fc' + str(i + 1)
+        x = layers.Dense(filter_num[i], activation='relu', name=name)(x)
+    # add the output layer
+    pred = layers.Dense(class_num, activation='softmax', name='predictions')(x)
+    # construct model and return
+    model = keras.Model(base.input, pred)
+    return model
 
 # train a model
 def train_model(model, model_name, dense_num=2, epoch_num=50,

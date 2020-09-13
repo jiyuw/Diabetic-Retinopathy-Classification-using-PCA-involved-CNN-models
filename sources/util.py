@@ -152,7 +152,7 @@ def train_model(model, model_name, dense_num=2, epoch_num=50,
 
 
 # PCA analysis on a model
-def model_PCA(model, model_name, mode=1, test_dir=os.path.join('Data', 'preprocessed_images', 'test'),
+def model_PCA(model, model_name, mode=1, batch_size = 64, test_dir=os.path.join('Data', 'preprocessed_images', 'test'),
               save_dir='Saved_files'):
     """
     analyze layer activations of the model
@@ -171,7 +171,7 @@ def model_PCA(model, model_name, mode=1, test_dir=os.path.join('Data', 'preproce
 
     test_datagen = ImageDataGenerator(rescale=1. / 255)
     test_img = test_datagen.flow_from_directory(directory=test_dir, target_size=(224, 224), color_mode="rgb",
-                                                batch_size=64, class_mode="categorical", shuffle=True)
+                                                batch_size=batch_size, class_mode="categorical", shuffle=True)
 
     # obtain activation map
     get_layer_output = K.function(inputs=model.input, outputs={layer.name: layer.output for layer in model.layers})

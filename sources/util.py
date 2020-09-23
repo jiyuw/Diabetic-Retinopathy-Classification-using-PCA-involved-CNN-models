@@ -37,8 +37,9 @@ def load_model(model_file, model_dir=os.path.join("Saved_files", "models")):
     print(model_name + ' model loaded')
     return model
 
+
 # add top layers to model base
-def addTops(base, filter_num = 4096, dense_num = 2, class_num = 5):
+def addTops(base, filter_num=4096, dense_num=2, class_num=5):
     """
     Add top layers to model base
     Input:
@@ -57,7 +58,7 @@ def addTops(base, filter_num = 4096, dense_num = 2, class_num = 5):
             raise ValueError('Number of items in filter_num does not match with dense_num')
     else:
         raise ValueError('Wrong input type of filter_num')
-    
+
     # add flatten layer
     x = layers.Flatten(name='flatten')(base.output)
     # add fully connected/dense layers
@@ -69,6 +70,7 @@ def addTops(base, filter_num = 4096, dense_num = 2, class_num = 5):
     # construct model and return
     model = keras.Model(base.input, pred)
     return model
+
 
 # train a model
 def train_model(model, model_name, dense_num=2, epoch_num=50,
@@ -152,7 +154,7 @@ def train_model(model, model_name, dense_num=2, epoch_num=50,
 
 
 # PCA analysis on a model
-def model_PCA(model, model_name, mode=1, batch_size = 64, test_dir=os.path.join('Data', 'preprocessed_images', 'test'),
+def model_PCA(model, model_name, mode=1, batch_size=64, test_dir=os.path.join('Data', 'preprocessed_images', 'test'),
               save_dir='Saved_files'):
     """
     analyze layer activations of the model
@@ -215,4 +217,3 @@ def model_PCA(model, model_name, mode=1, batch_size = 64, test_dir=os.path.join(
     print(PCA_file + " created")
 
     return model
-

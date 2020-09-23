@@ -1,2 +1,5 @@
 model,training time,epochs
 ShallowNet_Base,1156.5494,50
+ShallowNet_Var1,1034.38,50
+ShallowNet_Var2,1057.1211,50
+ShallowNet_Var3,1006.4039,50

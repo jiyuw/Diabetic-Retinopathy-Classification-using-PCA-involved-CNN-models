@@ -26,10 +26,10 @@ import os
 
 
 # load a trained model
-def load_model(model_file, model_dir=os.path.join("Saved_files", "models")):
+def load_saved_model(model_file, model_dir=os.path.join("Saved_files", "models")):
     model_path = os.path.join(model_dir, model_file)
-    if os.path.exists(model_path):
-        raise ValueError(f'Model {model_file} not found')
+    if not os.path.exists(model_path):
+        raise ValueError(f'Model {model_path} not found')
 
     model_name, _ = model_file.split('.')
 

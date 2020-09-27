@@ -86,6 +86,8 @@ def train_model(model, model_name, dense_num=2, epoch_num=50,
         epoch_num: number of epochs to train
         train_dir: path to training set
         test_dir: path to test set
+        save_dir: path to save output files
+        partial_training: True - only train fc layers; False - train all layers
     Output:
         csv file with training history
         h5 file with trained model
@@ -111,7 +113,7 @@ def train_model(model, model_name, dense_num=2, epoch_num=50,
     weights = {0: 0.4062717770034843, 1: 1.976271186440678, 2: 0.7333333333333333, 3: 3.785714285714286,
                4: 2.4703389830508473}
 
-    # get index of the first fc layer of the top layers if partial training is True
+    # only set fc layers to trainable if partial training is True
     if partial_training:
         idx = -(dense_num + 1)
         for layer in model.layers[:idx]:
@@ -162,6 +164,8 @@ def model_PCA(model, model_name, mode=1, batch_size=64, test_dir=os.path.join('D
         model: model to analyze
         model_name: name of the model
         mode: 1 - analyze top-fc only; 2 - analyze conv and fc
+        batch_size: batch size of test set used for activation map calculation
+        test_dir: path to test set used for activation map calculation
     """
 
     if mode == 1:
@@ -187,6 +191,7 @@ def model_PCA(model, model_name, mode=1, batch_size=64, test_dir=os.path.join('D
         pca.fit(output)
         return pca.explained_variance_ratio_
 
+    # check if type of layer is in target
     def layer_check(layer):
         for name in target:
             if name in layer:
@@ -198,9 +203,12 @@ def model_PCA(model, model_name, mode=1, batch_size=64, test_dir=os.path.join('D
     cnt = 1
     for key, val in layer_output.items():
         cat = layer_check(key)
+
+        # if this layer is in target
         if cat:
             variance = analyze_PCA(val)
             cumVar = np.cumsum(variance)
+            # minimum number of filter/node to explain 99.9% variance
             mini = np.argmax(cumVar[cumVar < 0.999]) + 2
             if cat == 'conv':
                 dim = 3

@@ -49,7 +49,7 @@ The **base shallow model** consists of four convolutional blocks, each of which 
 <p align="center">
   <img align="center" src="report_images/shallow_base.png" alt="base_model" width="600"/>
 </p>
-**<div align="center">Structure of the ShallowNet Base model</div>**<br />
+<div align="center"><b>Structure of the ShallowNet Base model</b></div><br />
 
 
 * PCA analysis on base model
@@ -58,7 +58,7 @@ After the pretraining of the base model, **PCA analysis** was performed on its a
 
 Below are the details of the shallow models:
 
-**<div align="center">Comparisons on structures of ShallowNets</div>**
+<div align="center"><b>Comparisons on structures of ShallowNets</b></div>
 <p align="center">
   <img align="center" src="report_images/shallow_models.png" alt="shallow_models" width="600"/>
 </p>
@@ -76,9 +76,9 @@ Three **variant models** were created based on the PCA result:
 Performance of these three models on classification AUC is comparable to the base model, while training time and number of parameters are reduced.
 
 <p align="center">
-  <img align="center" src="report_images/metrics_comparison.png" alt="model_compare" width="800"/>
+  <img align="center" src="report_images/metrics_comparison.png" alt="model_compare"/>
 </p>
-**<div align="center">Compare performance of ShallowNets</div>**<br />
+<div align="center"><b>Compare performance of ShallowNets</b></div><br />
 
 Details of the analysis can be found in [this notebook](002c-shallow%20CNN_analysis.ipynb)
 

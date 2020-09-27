@@ -46,8 +46,11 @@ Shallow CNN models implemented using Tensorflow would be a good tool to study th
 
 The **base shallow model** consists of four convolutional blocks, each of which contain two convolutional layers as well as a maxpooling layer and a batch normalization layer.
 
-<img align="center" src="report_images/shallow_base.png" alt="base_model" width="600"/>
-<div align="center">Structure of the ShallowNet Base model</div>
+<p align="center">
+  <img align="center" src="report_images/shallow_base.png" alt="base_model" width="600"/>
+</p>
+<div align="center">**Structure of the ShallowNet Base model**</div><br />
+
 
 * PCA analysis on base model
 
@@ -55,8 +58,12 @@ After the pretraining of the base model, **PCA analysis** was performed on its a
 
 Below are the details of the shallow models:
 
-<div align="center">Comparisons on structures of ShallowNets</div>
-<img align="center" src="report_images/shallow_models.png" alt="shallow_models" width="600"/>
+<div align="center">**Comparisons on structures of ShallowNets**</div>
+<p align="center">
+  <img align="center" src="report_images/shallow_models.png" alt="shallow_models" width="600"/>
+</p>
+<br />
+
 
 * Performance of variant models
 

@@ -1,5 +1,5 @@
 from tensorflow.keras import applications as APP
-import util
+from sources import util
 
 def model_assessment(model_name, model_bases):
     # create model

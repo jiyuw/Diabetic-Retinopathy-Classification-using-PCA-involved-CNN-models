@@ -138,6 +138,21 @@ def train_model(model, model_name, dense_num=2, epoch_num=50,
     df.to_csv(hist_name)  # .csv file
     model.save(save_name)  # .h5 file
 
+    # save number of parameters
+    tmpstring = []
+    summary = model.summary(print_fn = lambda x: tmpstring.append(x))
+    sum_file = os.path.join(save_dir, 'model_summary.csv')
+    if os.path.exists(sum_file):
+        sum_df = pd.read_csv(sum_file)
+    else:
+        sum_df = pd.DataFrame(columns=['model', 'trainable para', 'non-trainable para', 'total para'])
+
+    para_num = {'model': model_name, 'trainable para': int(tmpstring[-3].split(':')[1].strip().replace(',', '')),
+               'non-trainable para': int(tmpstring[-2].split(':')[1].strip().replace(',', '')),
+               'total para': int(tmpstring[-4].split(':')[1].strip().replace(',', ''))}
+    sum_df = sum_df.append(para_num, ignore_index=True).sort_values(by=['model'])
+    sum_df.to_csv(sum_file, index=False)
+    
     # save training time
     time_file = os.path.join(save_dir, 'training_times.csv')
     if os.path.exists(time_file):
@@ -150,7 +165,7 @@ def train_model(model, model_name, dense_num=2, epoch_num=50,
     time_df.to_csv(time_file, index=False)
 
     print('Files created:')
-    print([hist_name, save_name, time_file])
+    print([hist_name, save_name, sum_file, time_file])
 
     return model
 
@@ -180,7 +195,11 @@ def model_PCA(model, model_name, mode=1, batch_size=64, test_dir=os.path.join('D
                                                 batch_size=batch_size, class_mode="categorical", shuffle=True)
 
     # obtain activation map
-    get_layer_output = K.function(inputs=model.input, outputs={layer.name: layer.output for layer in model.layers})
+    if mode == 1:
+        get_layer_output = K.function(inputs=model.input, outputs={layer.name: layer.output for layer in model.layers if 'fc' in layer.name})
+    
+    else:
+        get_layer_output = K.function(inputs=model.input, outputs={layer.name: layer.output for layer in model.layers})
     layer_output = get_layer_output(test_img[0])
 
     def analyze_PCA(output):
@@ -223,5 +242,8 @@ def model_PCA(model, model_name, mode=1, batch_size=64, test_dir=os.path.join('D
 
     print("PCA on " + model_name + " finished")
     print(PCA_file + " created")
-
+    
+    if mode == 1:
+        return output['#post-PCA'].tolist()
+    
     return model

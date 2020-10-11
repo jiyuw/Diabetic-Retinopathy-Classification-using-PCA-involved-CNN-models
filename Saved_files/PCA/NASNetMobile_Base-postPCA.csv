@@ -1,0 +1,3 @@
+model,layer_cat,layer,#pre-PCA,#post-PCA
+NASNetMobile_Base,fc,top_fc1,4096,61
+NASNetMobile_Base,fc,top_fc2,4096,62

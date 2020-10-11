@@ -246,4 +246,8 @@ def model_PCA(model, model_name, mode=1, batch_size=64, test_dir=os.path.join('D
     if mode == 1:
         return output['#post-PCA'].tolist()
     
+<<<<<<< HEAD
     return model
+=======
+    return model
+>>>>>>> 24a3aca196367f2f8105af8b0f26f72f67094147

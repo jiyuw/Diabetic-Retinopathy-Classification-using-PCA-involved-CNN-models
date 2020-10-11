@@ -1,0 +1,3 @@
+model,layer_cat,layer,#pre-PCA,#post-PCA
+Xception_Base,fc,top_fc1,4096,63
+Xception_Base,fc,top_fc2,4096,63

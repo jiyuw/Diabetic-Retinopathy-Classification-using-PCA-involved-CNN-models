@@ -1,0 +1,3 @@
+model,layer_cat,layer,#pre-PCA,#post-PCA
+InceptionV3_Base,fc,top_fc1,4096,63
+InceptionV3_Base,fc,top_fc2,4096,63

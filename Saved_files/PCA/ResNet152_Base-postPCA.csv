@@ -1,0 +1,3 @@
+model,layer_cat,layer,#pre-PCA,#post-PCA
+ResNet152_Base,fc,top_fc1,4096,3
+ResNet152_Base,fc,top_fc2,4096,6

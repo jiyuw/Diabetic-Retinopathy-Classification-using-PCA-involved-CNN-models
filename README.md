@@ -94,4 +94,5 @@ Except for the DenseNet169, all other models have similar model performance befo
   <img align="center" src="report_images/deep_model_metrics_comparison.png" alt="model_compare"/>
 </p>
 <div align="center"><b>Compare Performance of Deep CNN Models</b></div><br />
+
 Details of the analysis can be found in [this notebook](003b_Model_Evaluation.ipynb)

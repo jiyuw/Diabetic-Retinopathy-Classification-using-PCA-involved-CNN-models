@@ -83,3 +83,22 @@ Performance of these three models on classification AUC is comparable to the bas
 Details of the analysis can be found in [this notebook](002c-shallow%20CNN_analysis.ipynb)
 
 ## Deep CNN models
+Several deep CNN models, including DenseNet169, InceptionV3, MobileNetV2, NASNetMobile, ResNet152, VGG16, and Xception, are implemented.
+<br/> We trained various models to explore the effect of PCA on different CNN models.
+<br/> One thing that needs to be mentioned, we used the pre-trained model (weights = 'imagenet'). The **PCA analysis** was performed only on the fc layers.
+* Performance of Original Models and Post-PCA Models
+<br> 
+Except for the DenseNet169, NASNetMobile, and ResNet152, all other models have similar model performance before and after PCA implementation.
+<br/> Overall, the training time of each post_PCA model is slightly shorter than its corresponding original model.
+
+<div align="center"><b>Compare AUC Scores of Deep CNN Models</b></div><br />
+<p align="center">
+  <img align="center" src="report_images/deep_cnn_model_metrics.png" alt="model_compare"/>
+</p>
+
+<div align="center"><b>Compare Training Time of Deep CNN Models</b></div><br />
+<p align="center">
+  <img align="center" src="report_images/deep_cnn_traintime_paranum.png" alt="model_compare"/>
+</p>
+
+Details of the analysis can be found in [this notebook](003b_Model_Evaluation.ipynb)
